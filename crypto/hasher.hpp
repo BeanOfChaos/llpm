@@ -7,9 +7,9 @@
 using hash_fn_t = unsigned char * (*)(const unsigned char*, size_t, unsigned char*);
 
 template <hash_fn_t F, size_t digest_len>
-class Hash {
+class Digest {
     public:
-        Hash(unsigned char *src): buffer(src) {};
+        Digest(unsigned char *src): buffer(src) {};
         std::string hex()
         {
             std::stringstream hex_stream;
@@ -36,7 +36,7 @@ class Hash {
 
 template <hash_fn_t F, size_t digest_len>
 class Hasher {
-    using Hash_t = Hash<F, digest_len>;
+    using Digest_t = Digest<F, digest_len>;
     public:
         Hasher(){};
         void update(const unsigned char *data, size_t len)
@@ -59,14 +59,14 @@ class Hasher {
             ss.clear();
             clear_last();
         }
-        std::shared_ptr<Hash_t> hash()
+        std::shared_ptr<Digest_t> hash()
         {
             if (last_hash)
                 return last_hash;
             std::string s = ss.str();
             unsigned char *buffer = new unsigned char[digest_len];
             F(reinterpret_cast<const unsigned char*>(s.c_str()), s.length(), buffer);
-            auto ret = std::make_shared<Hash_t>(buffer);
+            auto ret = std::make_shared<Digest_t>(buffer);
             last_hash = ret;
             return ret;
         }
@@ -78,7 +78,7 @@ class Hasher {
         }
     private:
         std::stringstream ss;
-        std::shared_ptr<Hash_t> last_hash;
+        std::shared_ptr<Digest_t> last_hash;
         void clear_last()
         {
             last_hash.reset();
