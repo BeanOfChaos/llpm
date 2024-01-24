@@ -1,3 +1,6 @@
+find_package(nlohmann_json)
+find_package(OpenSSL)
+
 add_library(hasher INTERFACE)
 
 target_include_directories(hasher INTERFACE
@@ -5,6 +8,7 @@ target_include_directories(hasher INTERFACE
 )
 target_link_libraries(hasher INTERFACE
     OpenSSL::Crypto
+    nlohmann_json::nlohmann_json
 )
 
 add_library(hmac INTERFACE)

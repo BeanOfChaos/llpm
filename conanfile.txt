@@ -1,0 +1,7 @@
+[requires]
+openssl/3.2.0
+nlohmann_json/3.11.3
+
+[generators]
+CMakeDeps
+CMakeToolchain

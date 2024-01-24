@@ -1,24 +1,21 @@
-#include <cstring>
 #include <iostream>
-#include <iomanip>
-#include <string>
 
-#include "hasher.hpp"
+#include "database.hpp"
+#include "hmac.hpp"
 
 int main(int argc, char **argv) {
-	if (argc < 2){
-		std::cout << "Usage: " << argv[0] << " <text to be hashed>" << std::endl;
-		return 0;
+	if (argc < 2)
+	{
+		std::cerr << "Usage: " << argv[0] << " <some string to sign>" << std::endl;
+		exit(1);
 	}
-	
-	SHA256_Hasher hasher;
-	for (int i = 0; i < argc; ++i) {
-		hasher.update(argv[i]);
-	}
-	std::cout << hasher.hash()->hex() << std::endl;
-	for (int i = 0; i < 1000; ++i) hasher.rehash();
 
-	std::cout << hasher.hash()->hex() << std::endl;
+	std::string tbs(argv[1]);
+	unsigned char pkey[64];
+	for (int i = 0; i < 64; ++i)
+		pkey[i] = i;
+	Signature<SHA256_Hasher> s(tbs, pkey, 64);
+	std::cout << s.hex() << std::endl;
 	
 	return 0;
 }
